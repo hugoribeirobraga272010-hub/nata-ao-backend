@@ -7,10 +7,12 @@ app.use(cors());
 app.use(express.json());
  
 const db = mysql.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "",
-    database: "natacao"
+    host: process.env.DB_HOST || "localhost",
+    user: process.env.DB_USER || "root",
+    password: process.env.DB_PASSWORD || "",
+    database: process.env.DB_NAME || "natacao",
+    port: process.env.DB_PORT || 3306,
+    ssl: process.env.DB_HOST ? { rejectUnauthorized: false } : null
 });
 
 db.connect((erro) => {
@@ -20,6 +22,24 @@ db.connect((erro) => {
         return;
     }
     console.log("Conectado com sucesso");
+    const criarTabelaSQL = `
+        CREATE TABLE IF NOT EXISTS alunos (
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            nome VARCHAR(67) NOT NULL,
+            idade INT NOT NULL,
+            nivel VARCHAR(67) NOT NULL,
+            horario VARCHAR(67) NOT NULL,
+            ativo boolean DEFAULT true
+        )
+    `;
+    db.query(criarTabelaSQL, (erro, resultado) => {
+        if(erro) {
+            console.log("Erro ao criar tabela");
+            console.log(erro);
+            return;
+        }
+        console.log("Tabela criada com sucesso");
+    });
 });
  
 app.get("/", (req, res) => {
@@ -154,10 +174,10 @@ app.post("/alunos", (req,res) => {
             erro: `Senha incorreta. Faltam ${3-incorretas} até o bloqueio do sistema.`
         });
     });
- 
-    app.listen(3000, () => {
+    port = process.env.PORT || 3000;
+    app.listen(port, () => {
         console.log("Servidor rodando em: ")
-        console.log("http://localhost:3000")
+        console.log(`porta67${port}`)
     })
  
  
