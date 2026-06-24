@@ -1,4 +1,4 @@
-const API = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://localhost:3000" : "https://natacao-backend.onrender.com";
+const API = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1" ? "http://localhost:3000" : "https://nome-bem-generico.onrender.com";
  
 async function cadastrarAluno(event) {
     event.preventDefault();
@@ -9,7 +9,7 @@ async function cadastrarAluno(event) {
     const horario = document.getElementById("horario").value;
  
     const novoAluno = {nome, idade, nivel, horario};
- 
+
     try {
         const resposta = await fetch(`${API}/alunos`, {
             method: "POST",
